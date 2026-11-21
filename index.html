@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+  <title>ByDrop</title>
+  <meta name="description" content="Pasa archivos y texto entre tus dispositivos al instante.">
+  <meta name="theme-color" content="#0a84ff">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- Instalable (iPhone / iPad / Android / PC) -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="ByDrop">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    // Aplica el tema antes de pintar para que no parpadee
+    (function () {
+      try {
+        var t = localStorage.getItem('bydrop.theme') || 'auto';
+        document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- ============ ICONOS ============ -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-drop" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5.5 12.5a6.5 6.5 0 0 1 13 0M2.5 12.5a9.5 9.5 0 0 1 19 0M8.5 12.5a3.5 3.5 0 0 1 7 0"/><circle cx="12" cy="17" r="2" fill="currentColor"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M7 18h10.5a4 4 0 0 0 .6-7.96A6 6 0 0 0 6.3 9.1 4.5 4.5 0 0 0 7 18z"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></g></symbol>
+    <symbol id="i-clip" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="m21.4 11.1-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M12 19V5M5 12l7-7 7 7"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g></symbol>
+    <symbol id="i-paste" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h4"/></g></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></g></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 4v12m-5-5 5 5 5-5M5 20h14"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M9 3h6l-1 6 4 4H6l4-4zM12 13v8"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M10 11v6M14 11v6M5 7l1 13h12l1-13M9 7V4h6v3"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><g fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></g></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></g></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8zM14 3v5h5"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></g></symbol>
+    <symbol id="i-video" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3z"/></g></symbol>
+    <symbol id="i-text" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 6h16M4 12h16M4 18h10"/></symbol>
+    <symbol id="i-music" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><path d="M10 18V5l11-2v13"/></g></symbol>
+    <symbol id="i-zip" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8zM10 3v2m0 2v2m0 2v2m-1 2h2v3H9z"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path stroke-linecap="round" d="M11 18h2"/></g></symbol>
+    <symbol id="i-tablet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2.5"/><path stroke-linecap="round" d="M11 18h2"/></g></symbol>
+    <symbol id="i-laptop" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="4" width="16" height="11" rx="1.5"/><path d="M2 19h20l-2-4H4z"/></g></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></g></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5 9-10"/></symbol>
+  </svg>
+
+  <!-- ============ SIN CONFIGURAR ============ -->
+  <section id="screen-setup" class="screen center" hidden>
+    <div class="auth-card">
+      <div class="logo-big"><svg><use href="#i-drop"/></svg></div>
+      <h1>ByDrop</h1>
+      <p class="muted">Falta conectar tu Supabase. Abre <b>config.js</b> y pega tu URL y tu clave (lo tienes explicado paso a paso en el <b>README</b>).</p>
+    </div>
+    <footer class="sign">HECHO POR @BYALVARO__</footer>
+  </section>
+
+  <!-- ============ LOGIN ============ -->
+  <section id="screen-login" class="screen center" hidden>
+    <form id="login-form" class="auth-card" autocomplete="on">
+      <div class="logo-big"><svg><use href="#i-drop"/></svg></div>
+      <h1>ByDrop</h1>
+      <p class="muted">Tus archivos y textos, en todos tus dispositivos.</p>
+      <input id="login-email" type="email" placeholder="Correo" autocomplete="username" required>
+      <input id="login-pass" type="password" placeholder="Contraseña" autocomplete="current-password" required>
+      <button class="btn primary big" type="submit">Entrar</button>
+      <p id="login-error" class="error" hidden></p>
+      <div class="divider"><span>¿Te han pasado un código?</span></div>
+      <div class="row">
+        <input id="guest-code" placeholder="Código de sala" maxlength="6" autocapitalize="characters" autocomplete="off">
+        <button id="guest-join" class="btn" type="button">Unirme</button>
+      </div>
+    </form>
+    <footer class="sign">HECHO POR @BYALVARO__</footer>
+  </section>
+
+  <!-- ============ ENLACE COMPARTIDO ============ -->
+  <section id="screen-shared" class="screen center" hidden>
+    <div class="auth-card shared-card">
+      <div class="brand-mini"><svg><use href="#i-drop"/></svg> ByDrop</div>
+      <div id="shared-body"></div>
+    </div>
+    <footer class="sign">HECHO POR @BYALVARO__</footer>
+  </section>
+
+  <!-- ============ APP ============ -->
+  <section id="app" class="screen" hidden>
+    <header class="topbar">
+      <div class="brand"><span class="brand-icon"><svg><use href="#i-drop"/></svg></span>ByDrop</div>
+      <nav class="segmented" id="tabs">
+        <button data-tab="cloud" class="active"><svg><use href="#i-cloud"/></svg><span>Nube</span></button>
+        <button data-tab="direct"><svg><use href="#i-bolt"/></svg><span>Directo</span></button>
+        <i class="seg-pill"></i>
+      </nav>
+      <button class="icon-btn" id="btn-settings" aria-label="Ajustes"><svg><use href="#i-gear"/></svg></button>
+    </header>
+
+    <main class="views">
+      <!-- ---------- NUBE ---------- -->
+      <div class="view" id="view-cloud">
+        <div class="composer card" id="composer">
+          <textarea id="compose-text" rows="1" placeholder="Escribe o pega un texto, un enlace…"></textarea>
+          <div id="compose-files" class="chips"></div>
+          <div class="composer-bar">
+            <button class="icon-btn soft" id="btn-attach" title="Añadir archivos"><svg><use href="#i-clip"/></svg></button>
+            <button class="icon-btn soft" id="btn-paste" title="Pegar del portapapeles"><svg><use href="#i-paste"/></svg></button>
+            <label class="expiry-chip" title="Cuándo se borra">
+              <svg><use href="#i-clock"/></svg>
+              <select id="compose-expiry">
+                <option value="1">1 hora</option>
+                <option value="24" selected>24 horas</option>
+                <option value="168">7 días</option>
+                <option value="720">30 días</option>
+                <option value="0">Nunca</option>
+              </select>
+            </label>
+            <span class="spacer"></span>
+            <button class="send-btn" id="btn-send" aria-label="Enviar" disabled><svg><use href="#i-send"/></svg></button>
+          </div>
+          <input type="file" id="file-input" multiple hidden>
+        </div>
+
+        <div class="toolbar">
+          <div class="search">
+            <svg><use href="#i-search"/></svg>
+            <input id="search" type="search" placeholder="Buscar">
+          </div>
+          <div class="filters" id="filters">
+            <button data-f="all" class="active">Todo</button>
+            <button data-f="text">Textos</button>
+            <button data-f="image">Fotos</button>
+            <button data-f="video">Vídeos</button>
+            <button data-f="file">Archivos</button>
+          </div>
+        </div>
+
+        <div id="uploads"></div>
+        <div id="items" class="items"></div>
+        <div id="items-empty" class="empty" hidden>
+          <div class="empty-icon"><svg><use href="#i-cloud"/></svg></div>
+          <p><b>Tu nube está vacía</b></p>
+          <p class="muted">Escribe algo o arrastra archivos aquí. Aparecerán al instante en tus otros dispositivos.</p>
+        </div>
+
+        <div class="usage" id="usage">
+          <div class="usage-bar"><i id="usage-fill"></i></div>
+          <span id="usage-text">0 MB de 1 GB</span>
+        </div>
+      </div>
+
+      <!-- ---------- DIRECTO ---------- -->
+      <div class="view" id="view-direct" hidden>
+        <div class="radar card">
+          <div class="radar-rings"><i></i><i></i><i></i></div>
+          <div class="me">
+            <div class="me-icon"><svg id="me-icon"><use href="#i-laptop"/></svg></div>
+            <div class="me-name" id="me-name">Este dispositivo</div>
+            <div class="me-sub" id="me-sub">Visible para tus dispositivos</div>
+          </div>
+          <div class="peers" id="peers"></div>
+          <p class="radar-hint" id="radar-hint">Abre ByDrop en otro dispositivo y aparecerá aquí. Tócalo para enviarle algo.</p>
+        </div>
+
+        <div class="card room-card">
+          <div class="room-head">
+            <svg><use href="#i-users"/></svg>
+            <div>
+              <b>Pasar a un amigo</b>
+              <p class="muted small">Crea una sala, tu amigo escanea el QR o pone el código. Sin cuenta, sin límite de tamaño.</p>
+            </div>
+          </div>
+          <div id="room-idle" class="row">
+            <button class="btn primary" id="btn-room-create">Crear sala</button>
+            <input id="room-code-input" placeholder="Código" maxlength="6" autocapitalize="characters" autocomplete="off">
+            <button class="btn" id="btn-room-join">Unirme</button>
+          </div>
+          <div id="room-active" hidden>
+            <div class="room-active">
+              <div id="room-qr" class="qr"></div>
+              <div>
+                <div class="muted small">Código de sala</div>
+                <div class="room-code" id="room-code">------</div>
+                <div class="row wrap">
+                  <button class="btn small" id="btn-room-link"><svg><use href="#i-link"/></svg>Copiar enlace</button>
+                  <button class="btn small danger" id="btn-room-leave">Salir</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="received-wrap" hidden>
+          <h3 class="section-title">Recibidos ahora</h3>
+          <div id="received" class="items"></div>
+        </div>
+        <input type="file" id="direct-file-input" multiple hidden>
+      </div>
+    </main>
+
+    <footer class="sign">HECHO POR @BYALVARO__</footer>
+  </section>
+
+  <!-- ============ CAPAS ============ -->
+  <div id="drop-overlay" hidden>
+    <div class="drop-box"><svg><use href="#i-cloud"/></svg><b>Suelta para subir a tu nube</b></div>
+  </div>
+
+  <div id="modal" class="modal" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-sheet" id="modal-sheet"></div>
+  </div>
+
+  <div id="toasts"></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
