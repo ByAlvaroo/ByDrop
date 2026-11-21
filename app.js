@@ -73,7 +73,13 @@ $('#login-form').addEventListener('submit', async e => {
   });
   btn.disabled = false;
   if (error) {
-    $('#login-error').textContent = error.message.includes('Invalid') ? 'Correo o contraseña incorrectos' : error.message;
+    const msg = error.message || String(error);
+    $('#login-error').textContent =
+      /invalid login credentials/i.test(msg) ? 'Correo o contraseña incorrectos (Supabase no encuentra ese usuario con esa contraseña)'
+      : /email not confirmed/i.test(msg) ? 'El usuario no está confirmado: márcalo como confirmado en Supabase'
+      : /invalid api key|no api key|jwt|apikey/i.test(msg) ? 'La clave de config.js no es válida: vuelve a copiar la Publishable key'
+      : /failed to fetch|network/i.test(msg) ? 'No se puede conectar con Supabase: revisa la URL de config.js'
+      : 'Error: ' + msg;
     $('#login-error').hidden = false;
     return;
   }

@@ -2,7 +2,7 @@
 // Sube el número de versión cuando cambies archivos para forzar la actualización.
 // HECHO POR @BYALVARO__
 
-const VERSION = 'bydrop-v1';
+const VERSION = 'bydrop-v2';
 const SHELL = [
   './', 'index.html', 'styles.css', 'app.js', 'config.js', 'js/util.js', 'js/direct.js',
   'manifest.webmanifest', 'icons/icon-192.png', 'icons/apple-touch-icon.png',
