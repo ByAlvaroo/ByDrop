@@ -2,7 +2,7 @@
 // Sube el número de versión cuando cambies archivos para forzar la actualización.
 // HECHO POR @BYALVARO__
 
-const VERSION = 'bydrop-v2';
+const VERSION = 'bydrop-v3';
 const SHELL = [
   './', 'index.html', 'styles.css', 'app.js', 'config.js', 'js/util.js', 'js/direct.js',
   'manifest.webmanifest', 'icons/icon-192.png', 'icons/apple-touch-icon.png',
@@ -28,15 +28,24 @@ self.addEventListener('fetch', e => {
   const isCdn = CDN.includes(url.hostname);
   if (!sameOrigin && !isCdn) return;            // Supabase y demás: siempre por red
 
-  // Mostrar lo guardado al instante y actualizar por detrás
+  // Librerías externas: de la caché (no cambian). Archivos de ByDrop: siempre la versión nueva
+  // si hay internet, y la guardada si no la hay (así las actualizaciones llegan al momento).
   e.respondWith(
     caches.open(VERSION).then(async cache => {
-      const cached = await cache.match(req, { ignoreSearch: sameOrigin && req.mode === 'navigate' });
-      const net = fetch(req).then(res => {
+      if (isCdn) {
+        const hit = await cache.match(req);
+        if (hit) return hit;
+        const res = await fetch(req);
         if (res.ok) cache.put(req, res.clone());
         return res;
-      }).catch(() => cached);
-      return cached || net;
+      }
+      try {
+        const res = await fetch(req, { cache: 'no-cache' });
+        if (res.ok) cache.put(req, res.clone());
+        return res;
+      } catch {
+        return (await cache.match(req, { ignoreSearch: req.mode === 'navigate' })) || Response.error();
+      }
     })
   );
 });
